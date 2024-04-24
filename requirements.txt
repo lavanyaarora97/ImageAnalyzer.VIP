@@ -1,6 +1,6 @@
-torch== 1.13.1
-torchvision==0.14.1
-fastai==2.7.12
-Flask
-Flask-Cors
-pillow
+Flask==2.0.1
+torch==1.7.1
+torchvision==0.8.2
+Pillow==8.0.1
+numpy==1.19.2
+python-magic==0.4.24

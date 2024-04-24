@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Object Detection</title>
+    <link rel="stylesheet" href="bootstrap-min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- In classify.html and detect.html -->
+    <script src="app.js"></script>  <!-- Make sure this handles form submissions correctly -->
+</head>
+<body>
+       <!-- Detect.html -->
+<div class="container">
+    <h1>Upload your image for classification</h1>
+    <form id="upload-form" action="{{ url_for('detect') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Detect</button>
+    </form>
+    <div id="loading" style="display: none;">
+    <p>Loading...</p>
+<div id="results"></div>  <!-- Results will be injected here by app.js -->
+        <div>
+    <a href="/" class="btn">Return Home</a>
+</div>
+    <div class="footer">
+            <p>Made with ❤️ by Lavanya Arora - @00575871</p>
+        </div
+    </div>
+</body>
+</html>
