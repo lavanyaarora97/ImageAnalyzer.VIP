@@ -1,6 +1,6 @@
 services:
 - type: web
-  name: imageanalyzervip
+  name: imageanalyzer
   env: python
   plan: starter
   buildCommand: "pip install -r requirements.txt"
