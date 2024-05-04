@@ -22,11 +22,11 @@ classifier_model.fc = nn.Sequential(
     nn.Dropout(0.2),
     nn.Linear(128, 100)
 )
-classifier_model.load_state_dict(torch.load('models/classifier.pth'))
+classifier_model.load_state_dict(torch.load('models/classifier.pth', map_location=torch.device('cpu')))
 classifier_model.eval()
 
 # Load the object detection model
-detector_model = torch.load('models/detector.pt')
+detector_model = torch.load('models/detector.pt', map_location=torch.device('cpu'))
 detector_model.eval()
 
 def transform_image(image_bytes):
