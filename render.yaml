@@ -2,7 +2,7 @@ services:
 - type: web
   name: ImageAnalyzer.VIP
   env: python
-  plan: starter
+  plan: standard
   buildCommand: "pip install -r requirements.txt"
   startCommand: "python app.py"
   envVars:
@@ -10,6 +10,6 @@ services:
     value: production
   - key: FLASK_APP
     value: app.py
-  - key: PORT
+  - key: PORT 5000
     generateValue: true
   healthCheckPath: /

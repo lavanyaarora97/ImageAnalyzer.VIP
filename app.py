@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, render_template
 import torch
 from torchvision import models, transforms
 from PIL import Image
@@ -9,7 +9,23 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return send_from_directory('static', 'Home.html')
+    return render_template("Home.html")
+
+@app.route('/about')
+def about():
+    return render_template("About.html")
+
+@app.route('/contact')
+def contact():
+    return render_template("Contact.html")
+
+@app.route('/classify')
+def classifier():
+    return render_template("Classifier.html")
+
+@app.route('/detect')
+def detector():
+    return render_template("Detector.html")
 
 # Load the classification model
 classifier_model = models.resnet50(pretrained=False)

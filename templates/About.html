@@ -5,10 +5,10 @@
     <meta name="keywords" content="About">
     <meta name="description" content="">
     <title>About</title>
-    <link rel="stylesheet" href="nicepage.css" media="screen">
-<link rel="stylesheet" href="About.css" media="screen">
-    <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
-    <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='nicepage.css') }}" media="screen">
+    <link rel="stylesheet" href="{{ url_for('static', filename='About.css') }}" media="screen">
+    <script class="u-script" type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}" defer=""></script>
+    <script class="u-script" type="text/javascript" src="{{ url_for('static', filename='nicepage.js') }}" defer=""></script>
     <meta name="generator" content="Nicepage 6.9.2, nicepage.com">
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
     <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
@@ -37,22 +37,22 @@
             </a>
           </div>
           <div class="u-custom-menu u-nav-container">
-            <ul class="u-nav u-unstyled u-nav-1"><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Home.html" style="padding: 10px 20px;">Home</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Classifier.html" style="padding: 10px 20px;">Classifier</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Detector.html" style="padding: 10px 20px;">Detector</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="About.html" style="padding: 10px 20px;">About</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Contact.html" style="padding: 10px 20px;">Contact</a>
+            <ul class="u-nav u-unstyled u-nav-1"><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/" style="padding: 10px 20px;">Home</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/classify" style="padding: 10px 20px;">Classifier</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/detect" style="padding: 10px 20px;">Detector</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/about" style="padding: 10px 20px;">About</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="/contact" style="padding: 10px 20px;">Contact</a>
 </li></ul>
           </div>
           <div class="u-custom-menu u-nav-container-collapse">
             <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
               <div class="u-inner-container-layout u-sidenav-overflow">
                 <div class="u-menu-close"></div>
-                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2"><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Home.html">Home</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Classifier.html">Classifier</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Detector.html">Detector</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="About.html">About</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Contact.html">Contact</a>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2"><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/">Home</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/classify">Classifier</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/detect">Detector</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/about">About</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="/contact">Contact</a>
 </li></ul>
               </div>
             </div>
@@ -65,14 +65,14 @@
         <div class="u-expanded-width-md u-expanded-width-sm u-expanded-width-xs u-list u-list-1">
           <div class="u-repeater u-repeater-1">
             <div class="u-align-left u-border-2 u-border-grey-75 u-container-style u-list-item u-repeater-item u-shape-rectangle u-list-item-1" data-animation-name="customAnimationIn" data-animation-duration="1250">
-              <div class="u-container-layout u-similar-container u-container-layout-1"><span class="u-file-icon u-icon u-icon-rounded u-palette-1-base u-radius-20 u-icon-1"><img src="images/739249.png" alt=""></span>
+              <div class="u-container-layout u-similar-container u-container-layout-1"><span class="u-file-icon u-icon u-icon-rounded u-palette-1-base u-radius-20 u-icon-1"><img src="{{url_for('static', filename='739249.png')}}" alt=""></span>
                 <h3 class="u-custom-font u-font-montserrat u-text u-text-default u-text-palette-1-base u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500"> Image Classification</h3>
                 <p class="u-text u-text-2" data-animation-name="customAnimationIn" data-animation-duration="1750" data-animation-delay="500" data-animation-direction="Left">ImageAnalyzer.VIP's Image Classifier classifies any image/bulk of images within seconds. The classifier uses a ResNet-50 Model trained on CIFAR-100 Dataset.<br>Accuracy: 93% 
                 </p>
               </div>
             </div>
             <div class="u-align-left u-border-2 u-border-grey-75 u-container-style u-list-item u-repeater-item u-shape-rectangle u-list-item-2" data-animation-name="customAnimationIn" data-animation-duration="1250" data-animation-delay="0">
-              <div class="u-container-layout u-similar-container u-container-layout-2"><span class="u-file-icon u-icon u-icon-rounded u-palette-1-base u-radius-20 u-icon-2"><img src="images/8654854.png" alt=""></span>
+              <div class="u-container-layout u-similar-container u-container-layout-2"><span class="u-file-icon u-icon u-icon-rounded u-palette-1-base u-radius-20 u-icon-2"><img src="{{url_for('static', filename='8654854.png')}}" alt=""></span>
                 <h3 class="u-custom-font u-font-montserrat u-text u-text-default u-text-palette-1-base u-text-3" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500">Object Detection</h3>
                 <p class="u-text u-text-4" data-animation-name="customAnimationIn" data-animation-duration="1750" data-animation-delay="500" data-animation-direction="Left"> ImageAnalyzer.VIP's Object Detector detects any image/bulk of images within seconds. The classifier uses a YOLO Model trained on COCOV8 Dataset.<br>Accuracy: 61%<br>
                 </p>
