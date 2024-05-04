@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 import torch
 from torchvision import models, transforms
 from PIL import Image
@@ -6,6 +6,10 @@ import io
 from torch import nn
 
 app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return send_from_directory('static', 'Home.html')
 
 # Load the classification model
 classifier_model = models.resnet50(pretrained=False)
@@ -25,6 +29,13 @@ classifier_model.fc = nn.Sequential(
 classifier_model.load_state_dict(torch.load('models/classifier.pth', map_location=torch.device('cpu')))
 #classifier_model.eval()
 
+# Image preprocessing transformations for classification
+classification_transform = transforms.Compose([
+    transforms.Resize((224, 224)),  # Resize to ResNet-50 input size
+    transforms.ToTensor(),
+    transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
+])
+
 # Load the object detection model
 detector_model = torch.load('models/detector.pt', map_location=torch.device('cpu'))
 #detector_model.eval()
@@ -42,7 +53,7 @@ def transform_image(image_bytes):
 @app.route('/classify', methods=['POST'])
 def classify():
     if 'files' not in request.files:
-        return jsonify({'error': 'No file part'})
+        return jsonify({'error': 'No file(s) provided'}), 400
     files = request.files.getlist('file')
     predictions = []
     for file in files:
@@ -56,7 +67,7 @@ def classify():
 @app.route('/detect', methods=['POST'])
 def detect():
     if 'files' not in request.files:
-        return jsonify({'error': 'No file part'})
+        return jsonify({'error': 'No file(s) provided'}), 400
     files = request.files.getlist('file')
     results = []
     for file in files:
@@ -80,4 +91,6 @@ def detect():
     return jsonify(results)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    import os
+    port = int(os.getenv("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
