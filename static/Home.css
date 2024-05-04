@@ -1,5 +1,5 @@
  .u-section-1 {
-  background-image: url("images/6.jpeg");
+  background-image: url("{{ url_for('static', filename='6.jpeg') }}");
   background-position: 50% 50%;
 }
 
@@ -288,7 +288,7 @@
     font-size: 1.5rem;
   }
 } .u-section-3 {
-  background-image: url("images/7.jpeg");
+  background-image: url("{{ url_for('static', filename='7.jpeg') }}");
   background-position: 50% 50%;
 }
 
@@ -618,7 +618,7 @@
 .u-section-6 .u-image-1 {
   width: 300px;
   height: 300px;
-  background-image: url("images/me.jpeg");
+  background-image: url("{{ url_for('static', filename='me.jpeg') }}");
   background-position: 50% 50%;
   margin: 0 auto;
 }
@@ -725,7 +725,7 @@
 
 .u-section-7 .u-image-2 {
   min-height: 183px;
-  background-image: url("images/stylized-3d-css-icon-side-view-free-png.png");
+  background-image: url("{{ url_for('static', filename='stylized-3d-css-icon-side-view-free-png.png') }}");
   background-position: 50% 50%;
 }
 
@@ -734,8 +734,8 @@
 }
 
 .u-section-7 .u-image-3 {
-  min-height: 183px;
-  background-image: url("images/javascript-logo-javascript-icon-transparent-free-png.png");
+  min-height: 183px;  
+  background-image: url("{{ url_for('static', filename='javascript-logo-javascript-icon-transparent-free-png.png') }}");
   background-position: 50% 50%;
 }
 
@@ -745,7 +745,7 @@
 
 .u-section-7 .u-image-4 {
   min-height: 183px;
-  background-image: url("images/1024px-JSON_vector_logo.svg.png");
+  background-image: url("{{ url_for('static', filename='1024px-JSON_vector_logo.svg.png') }}");
   background-position: 50% 50%;
 }
 
@@ -755,7 +755,7 @@
 
 .u-section-7 .u-image-5 {
   min-height: 183px;
-  background-image: url("images/programming-language-flask-icon-1024x914-r5y3w9tt.png");
+  background-image: url("{{ url_for('static', filename='programming-language-flask-icon-1024x914-r5y3w9tt.png') }}");
   background-position: 50% 50%;
 }
 
