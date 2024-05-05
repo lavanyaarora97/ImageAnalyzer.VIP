@@ -4,3 +4,7 @@ torchvision
 pillow
 ultralytics
 gunicorn
+tensorflow
+uuid
+os
+io

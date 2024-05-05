@@ -1,9 +1,14 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_file
 import torch
 from torchvision import models, transforms
 from PIL import Image
 import io
+import os
+import uuid
+import urllib
 from torch import nn
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.image import load_img , img_to_array
 
 app = Flask(__name__)
 
@@ -27,84 +32,86 @@ def classifier():
 def detector():
     return render_template("Detector.html")
 
-# Load the classification model
-classifier_model = models.resnet50(pretrained=False)
-num_ftrs = classifier_model.fc.in_features
-classifier_model.fc = nn.Sequential(
-    nn.Dropout(0.5),
-    nn.Linear(num_ftrs, 1024),
-    nn.Dropout(0.2),
-    nn.Linear(1024, 512),
-    nn.Dropout(0.2),
-    nn.Linear(512, 256),
-    nn.Dropout(0.2),
-    nn.Linear(256, 128),
-    nn.Dropout(0.2),
-    nn.Linear(128, 100)
-)
-classifier_model.load_state_dict(torch.load('models/classifier.pth', map_location=torch.device('cpu')))
-#classifier_model.eval()
+@app.route('/test')
+def detector():
+    return render_template("Test.html")
 
-# Image preprocessing transformations for classification
-classification_transform = transforms.Compose([
-    transforms.Resize((224, 224)),  # Resize to ResNet-50 input size
-    transforms.ToTensor(),
-    transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
-])
+@app.route('/result')
+def detector():
+    return render_template("Results.html")
 
-# Load the object detection model
-detector_model = torch.load('models/detector.pt', map_location=torch.device('cpu'))
-#detector_model.eval()
 
-def transform_image(image_bytes):
-    my_transforms = transforms.Compose([
-        transforms.Resize(256),
-        transforms.CenterCrop(224),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.229, 0.224])
-    ])
-    image = Image.open(io.BytesIO(image_bytes))
-    return my_transforms(image).unsqueeze(0)
 
-@app.route('/classify', methods=['POST'])
-def classify():
-    if 'files' not in request.files:
-        return jsonify({'error': 'No file(s) provided'}), 400
-    files = request.files.getlist('file')
-    predictions = []
-    for file in files:
-        img_bytes = file.read()
-        tensor = transform_image(img_bytes)
-        outputs = classifier_model(tensor)
-        _, predicted = torch.max(outputs.data, 1)
-        predictions.append({'class_id': predicted.item()})
-    return jsonify(predictions)
+model = load_model(models/classifier.pth)
 
-@app.route('/detect', methods=['POST'])
-def detect():
-    if 'files' not in request.files:
-        return jsonify({'error': 'No file(s) provided'}), 400
-    files = request.files.getlist('file')
-    results = []
-    for file in files:
-        img_bytes = file.read()
-        image_tensor = transform_image(img_bytes)
-        with torch.no_grad():
-            outputs = detector_model(image_tensor)
-        # Assuming outputs are bounding boxes [x1, y1, x2, y2, score, class]
-        detections = []
-        for detection in outputs[0]:
-            x1, y1, x2, y2, score, class_id = detection
-            detections.append({
-                'x1': x1.item(),
-                'y1': y1.item(),
-                'x2': x2.item(),
-                'y2': y2.item(),
-                'score': score.item(),
-                'class_id': class_id.item()
-            })
-        results.append(detections)
-    return jsonify(results)
+ALLOWED_EXT = set(['jpg' , 'jpeg' , 'png'])
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXT
+
+
+classes = ['beaver', 'dolphin', 'otter', 'seal', 'whale', 'aquarium fish', 'flatfish', 'ray', 'shark', 'trout', 'sorchids', 'poppies', 'roses', 'sunflowers', 'tulips', 'bottles', 'bowls', 'cans', 'cups', 'plates', 'apples', 'mushrooms', 'oranges', 'pears', 'sweet peppers', 'clock', 'computer keyboard', 'lamp', 'telephone', 'television', 'bed', 'chair', 'couch', 'table', 'wardrobe', 'bee', 'beetle', 'butterfly', 'caterpillar', 'cockroach', 'bear', 'leopard', 'lion', 'tiger', 'wolf', 'bridge', 'castle', 'house', 'road', 'skyscraper', 'cloud', 'forest', 'mountain', 'plain', 'sea', 'camel', 'cattle', 'chimpanzee', 'elephant', 'kangaroo', 'fox', 'porcupine', 'possum', 'raccoon', 'skunk', 'crab', 'lobster', 'snail', 'spider', 'worm', 'baby', 'boy', 'girl', 'man', 'woman', 'crocodile', 'dinosaur', 'lizard', 'snake', 'turtle', 'hamster', 'mouse', 'rabbit', 'shrew', 'squirrel', 'maple', 'oak', 'palm', 'pine', 'willow', 'bicycle', 'bus', 'motorcycle', 'pickup', 'truck', 'train', 'lawn-mower', 'rocket', 'streetcar', 'tank', 'tractor']
+
+def predict(filename , model):
+    img = load_img(filename , target_size = (32 , 32))
+    img = img_to_array(img)
+    img = img.reshape(1 , 32 ,32 ,3)
+
+    img = img.astype('float32')
+    img = img/255.0
+    result = model.predict(img)
+
+    dict_result = {}
+    for i in range(10):
+        dict_result[result[0][i]] = classes[i]
+
+    res = result[0]
+    res.sort()
+    res = res[::-1]
+    prob = res[:3]
+    
+    prob_result = []
+    class_result = []
+    for i in range(3):
+        prob_result.append((prob[i]*100).round(2))
+        class_result.append(dict_result[prob[i]])
+
+    return class_result , prob_result
+
+
+@app.route('/result' , methods = ['GET' , 'POST'])
+def success():
+    error = ''
+    target_img = os.path.join(os.getcwd() , 'static/images')
+    if request.method == 'POST':
+        if (request.files):
+            file = request.files['file']
+            if file and allowed_file(file.filename):
+                file.save(os.path.join(target_img , file.filename))
+                img_path = os.path.join(target_img , file.filename)
+                img = file.filename
+
+                class_result , prob_result = predict(img_path , model)
+
+                predictions = {
+                      "class1":class_result[0],
+                        "class2":class_result[1],
+                        "class3":class_result[2],
+                        "prob1": prob_result[0],
+                        "prob2": prob_result[1],
+                        "prob3": prob_result[2],
+                }
+
+            else:
+                error = "Please upload jpg and png images only"
+
+            if(len(error) == 0):
+                return  render_template('Results.html' , img  = img , predictions = predictions)
+            else:
+                return render_template('Test.html' , error = error)
+
+    else:
+        return render_template('Test.html')
 
 if __name__ == '__main__':
     import os
