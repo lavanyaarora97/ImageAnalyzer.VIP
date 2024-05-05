@@ -724,8 +724,8 @@
 }
 
 .u-section-7 .u-image-2 {
-  min-height: 183px;
-  background-image: url("{{ url_for('static', filename='stylized-3d-css-icon-side-view-free-png.png') }}");
+  min-height: 183px; 
+  background-image: url("/static/stylized-3d-css-icon-side-view-free-png.png");
   background-position: 50% 50%;
 }
 
