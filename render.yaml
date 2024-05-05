@@ -5,11 +5,5 @@ services:
   plan: standard
   buildCommand: "pip install -r requirements.txt"
   startCommand: "gunicorn --config gunicorn_config.py app:app"
-  envVars:
-  - key: FLASK_ENV
-    value: production
-  - key: FLASK_APP
-    value: app.py
-  - key: PORT 5000
     generateValue: true
   healthCheckPath: /
