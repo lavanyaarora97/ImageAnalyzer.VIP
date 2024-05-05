@@ -65,7 +65,7 @@
           <center>
           <div style="width: 100%; max-width: 650px; padding: 2rem; background-color: white; border-radius: 8px; text-align: center;">
             <div id="drop-area" style="padding: 2rem; border: 2px dashed #007bff; border-radius: 5px; cursor: pointer; color: #333;">
-                <form class="my-form" action="http://localhost:10000" method="post">
+                <form class="my-form" enctype="multipart/form-data" action="/results" method="post">
                     <p style="margin: 0 0 1rem 0; font-size: 1.2rem; color: #555;">Drag and Drop File(s) here</p>
                     <p style="font-size: 1.2rem; color: #555;">OR</p>
                     <input type="file" id="fileElem" multiple accept="*" onchange="handleFiles(this.files)" style="display: none;">
@@ -75,6 +75,10 @@
             <button id="classify-btn" type="submit" style="display: none; background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin-top: 20px; cursor: pointer; width: 590px;">CLASSIFY</button>
           </form>
           </div>
+          <div class = "header-content-sub">
+            <p style = "text-align: center; margin-top: 15px;color: red" class="header-content-info">{{error}}</p>
+          </div>
+  </div>
       <div id="classification-results"></div>      
       </center>
         </div>
