@@ -72,7 +72,7 @@
                 </form>
             </div>
             <ul id="file-list" style="list-style: none; padding: 0; margin-top: 20px; text-align: left; max-height: 100px; overflow-y: auto;"></ul>
-            <button id="classify-btn" style="display: none; background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin-top: 20px; cursor: pointer; width: 590px;">CLASSIFY</button>
+            <button id="classify-btn" type="submit" style="display: none; background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin-top: 20px; cursor: pointer; width: 590px;">CLASSIFY</button>
         </div>
       <div id="classification-results"></div>      
       </center>
@@ -136,7 +136,7 @@ document.querySelector('form').onsubmit = function(e) {
         formData.append('file', files[i]);
     }
 
-    fetch('http://localhost:5000/classify', {
+    fetch('http://localhost:10000/classify', {
         method: 'POST',
         body: formData,
     })
