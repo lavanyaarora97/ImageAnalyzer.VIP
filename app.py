@@ -86,7 +86,8 @@ classifier_model = load_classifier_model()
 
 def load_detector_model():
     # Load the pre-trained YOLOv8s model from Ultralytics
-    model = torch.hub.load('ultralytics/yolov8', 'yolov8s', pretrained=True)
+    #model = torch.hub.load('ultralytics/yolov8', 'yolov8s', pretrained=True)
+    model = YOLO('models/detector.pt')
     model.to('cpu')  # Move the model to CPU
     model.eval()  # Set the model to evaluation mode
     return model
