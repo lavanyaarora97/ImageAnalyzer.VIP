@@ -3,7 +3,7 @@ from torchvision import models, transforms
 import torch
 import torch.nn as nn
 from PIL import Image
-from io import BytesIO
+import io
 from ultralytics import YOLO  # Ensure this is correctly installed
 
 app = Flask(__name__)
@@ -74,10 +74,21 @@ def load_classifier_model():
     model.eval()
     return model
 
+classifier_model = load_classifier_model()
+
 # Load the detector model
+# def load_detector_model():
+#    model = YOLO('models/detector.pt', map_location='cpu')  # Adjust based on your actual saved model
+#    model.eval()
+#    return model
+
+#detector_model = load_detector_model()
+
 def load_detector_model():
-    model = YOLO('models/detector.pt', map_location='cpu')  # Adjust based on your actual saved model
-    model.eval()
+    # Load the pre-trained YOLOv8s model from Ultralytics
+    model = torch.hub.load('ultralytics/yolov8', 'yolov8s', pretrained=True)
+    model.to('cpu')  # Move the model to CPU
+    model.eval()  # Set the model to evaluation mode
     return model
 
 detector_model = load_detector_model()
@@ -100,20 +111,35 @@ def classify():
         return render_template('Classifier.html', classification_results=results)
     return render_template('Classifier.html')
 
-@app.route('/detect', methods=['GET', 'POST'])
-def detect():
-    if request.method == 'POST':
-        files = request.files.getlist('file')
-        results = []
-        for file in files:
-            if file:
-                image = Image.open(file.stream)
-                if image.mode != 'RGB':
-                    image = image.convert('RGB')
-                results.append(detector_model(image).pandas().xyxy[0].to_dict(orient='records'))  # Using pandas for easier manipulation
-        return render_template('Detector.html', detection_results=results)
-    return render_template('Detector.html')
+# @app.route('/detect', methods=['GET', 'POST'])
+# def detect():
+#    if request.method == 'POST':
+#        files = request.files.getlist('file')
+#        results = []
+#        for file in files:
+#            if file:
+#                image = Image.open(file.stream)
+#                if image.mode != 'RGB':
+#                    image = image.convert('RGB')
+#                results.append(detector_model(image).pandas().xyxy[0].to_dict(orient='records'))  # Using pandas for easier manipulation
+#        return render_template('Detector.html', detection_results=results)
+#    return render_template('Detector.html')
 
+
+@app.route('/detect', methods=['POST'])
+def detect():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    file = request.files['file']
+    image = Image.open(file.stream)
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
+    
+    # Prepare image for detection
+    results = detector_model(image, size=640)  # Size can be adjusted based on model requirements
+    detections = results.pandas().xyxy[0]  # Extracting results to DataFrame
+    
+    return jsonify(detections.to_dict(orient='records'))
 
 
 if __name__ == '__main__':
