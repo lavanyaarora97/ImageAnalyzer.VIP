@@ -70,7 +70,7 @@ def load_classifier_model():
     nn.Dropout(0.2),
     nn.Linear(128, 100)
     )
-    model.load_state_dict(torch.load('models/classifier.pth', map_location=torch.device('cpu')))
+    model.load_state_dict(torch.load('models/classifier.pth')
     model.eval()
     return model
 
