@@ -6,5 +6,3 @@ ultralytics
 gunicorn
 tensorflow
 uuid
-os
-io
