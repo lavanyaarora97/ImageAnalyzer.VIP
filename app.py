@@ -28,8 +28,8 @@ def detector():
     return render_template("Detector.html")
 
 # Load models (ensure correct paths and configurations)
-classifier_model = torch.load('/models/classifier.pth', map_location=torch.device('cpu'))
-detector_model = torch.load('/models/detector.pt', map_location=torch.device('cpu'))
+classifier_model = torch.load('models/classifier.pth', map_location=torch.device('cpu'))
+detector_model = torch.load('models/detector.pt', map_location=torch.device('cpu'))
 
 # Define transforms
 classifier_transform = transforms.Compose([
