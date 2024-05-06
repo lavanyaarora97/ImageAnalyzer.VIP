@@ -44,7 +44,7 @@ def load_classifier_model():
     model.fc = nn.Sequential(
         nn.Linear(num_ftrs, 100)  # Assuming 100 classes
     )
-    model.load_state_dict(torch.load('classifier.pth', map_location=torch.device('cpu')))
+    model.load_state_dict(torch.load('models/classifier.pth', map_location=torch.device('cpu')))
     model.eval()
     return model
 
@@ -52,7 +52,7 @@ classifier_model = load_classifier_model()
 
 # Load the detector model
 def load_detector_model():
-    model = YOLO('detector.pt', device='cpu')  # Adjust based on your actual saved model
+    model = YOLO('models/detector.pt', device='cpu')  # Adjust based on your actual saved model
     model.eval()
     return model
 
