@@ -9,7 +9,7 @@ from torch import nn
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img , img_to_array
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 
 app = Flask(__name__)
 
