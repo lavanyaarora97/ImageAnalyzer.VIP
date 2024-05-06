@@ -4,6 +4,4 @@ torchvision
 pillow
 ultralytics
 gunicorn
-tensorflow
-uuid
-urllib
+
