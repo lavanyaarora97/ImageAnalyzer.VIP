@@ -76,7 +76,7 @@ def load_classifier_model():
 
 # Load the detector model
 def load_detector_model():
-    model = YOLO('models/detector.pt', device='cpu')  # Adjust based on your actual saved model
+    model = YOLO('models/detector.pt', map_location='cpu')  # Adjust based on your actual saved model
     model.eval()
     return model
 
