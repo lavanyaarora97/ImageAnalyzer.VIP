@@ -62,21 +62,20 @@
       <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
         <div class="u-border-2 u-border-grey-75 u-clearfix u-custom-html u-expanded-width u-custom-html-1" style="margin-top:33px; margin-bottom:33px;">
           <h3 style="padding: 0; text-align: center; margin-bottom: -10px;">Image Classification</h3>
+         
           <center>
-          <div style="width: 100%; max-width: 650px; padding: 2rem; background-color: white; border-radius: 8px; text-align: center;">
-            <div id="drop-area" style="padding: 2rem; border: 2px dashed #007bff; border-radius: 5px; cursor: pointer; color: #333;">
-                <form class="my-form" action="http://localhost:10000" method="post">
-                    <p style="margin: 0 0 1rem 0; font-size: 1.2rem; color: #555;">Drag and Drop File(s) here</p>
-                    <p style="font-size: 1.2rem; color: #555;">OR</p>
-                    <input type="file" id="fileElem" multiple accept="*" onchange="handleFiles(this.files)" style="display: none;">
-                    <label for="fileElem" style="display: inline-block; background-color: #007bff; color: white; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Select File(s)</label>
-            </div>
-            <ul id="file-list" style="list-style: none; padding: 0; margin-top: 20px; text-align: left; max-height: 100px; overflow-y: auto;"></ul>
-            <button id="classify-btn" type="submit" style="display: none; background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin-top: 20px; cursor: pointer; width: 590px;">CLASSIFY</button>
+            <form class="my-form" action="/classify" method="post" enctype="multipart/form-data">
+              <input type="file" id="fileElem" name="file" multiple accept="image/*" onchange="handleFiles(this.files)" style="display: none;">
+              <label for="fileElem" style="display: inline-block; background-color: #007bff; color: white; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Select File(s)</label>
+              <button id="classify-btn" type="submit" style="display: none; background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin-top: 20px; cursor: pointer; width: 590px;">CLASSIFY</button>
           </form>
-          </div>
-      <div id="classification-results"></div>      
+          <div id="classification-results">
+              {% for result in classification_results %}
+                  <div>Classification Result: {{ result }}</div>
+              {% endfor %}
+          </div>               
       </center>
+      
         </div>
       </div>
     </section>

@@ -1,15 +1,9 @@
-from flask import Flask, request, jsonify, render_template, send_file
+from flask import Flask, request, render_template, redirect, url_for
 import torch
 from torchvision import models, transforms
 from PIL import Image
 import io
-import os
-import uuid
-from torch import nn
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import load_img , img_to_array
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 
 app = Flask(__name__)
 
@@ -33,86 +27,47 @@ def classifier():
 def detector():
     return render_template("Detector.html")
 
-@app.route('/test')
-def detector():
-    return render_template("Test.html")
+# Load models (ensure correct paths and configurations)
+classifier_model = torch.load('classifier.pth', map_location=torch.device('cpu'))
+detector_model = torch.load('detector.pt', map_location=torch.device('cpu'))
 
-@app.route('/result')
-def detector():
-    return render_template("Results.html")
+# Define transforms
+classifier_transform = transforms.Compose([
+    transforms.Resize((32, 32)),  # Adjust according to your specific model's input size
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
 
-
-
-model = load_model(models/classifier.pth)
-
-ALLOWED_EXT = set(['jpg' , 'jpeg' , 'png'])
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXT
-
-
-classes = ['beaver', 'dolphin', 'otter', 'seal', 'whale', 'aquarium fish', 'flatfish', 'ray', 'shark', 'trout', 'sorchids', 'poppies', 'roses', 'sunflowers', 'tulips', 'bottles', 'bowls', 'cans', 'cups', 'plates', 'apples', 'mushrooms', 'oranges', 'pears', 'sweet peppers', 'clock', 'computer keyboard', 'lamp', 'telephone', 'television', 'bed', 'chair', 'couch', 'table', 'wardrobe', 'bee', 'beetle', 'butterfly', 'caterpillar', 'cockroach', 'bear', 'leopard', 'lion', 'tiger', 'wolf', 'bridge', 'castle', 'house', 'road', 'skyscraper', 'cloud', 'forest', 'mountain', 'plain', 'sea', 'camel', 'cattle', 'chimpanzee', 'elephant', 'kangaroo', 'fox', 'porcupine', 'possum', 'raccoon', 'skunk', 'crab', 'lobster', 'snail', 'spider', 'worm', 'baby', 'boy', 'girl', 'man', 'woman', 'crocodile', 'dinosaur', 'lizard', 'snake', 'turtle', 'hamster', 'mouse', 'rabbit', 'shrew', 'squirrel', 'maple', 'oak', 'palm', 'pine', 'willow', 'bicycle', 'bus', 'motorcycle', 'pickup', 'truck', 'train', 'lawn-mower', 'rocket', 'streetcar', 'tank', 'tractor']
-
-def predict(filename , model):
-    img = load_img(filename , target_size = (32 , 32))
-    img = img_to_array(img)
-    img = img.reshape(1 , 32 ,32 ,3)
-
-    img = img.astype('float32')
-    img = img/255.0
-    result = model.predict(img)
-
-    dict_result = {}
-    for i in range(10):
-        dict_result[result[0][i]] = classes[i]
-
-    res = result[0]
-    res.sort()
-    res = res[::-1]
-    prob = res[:3]
-    
-    prob_result = []
-    class_result = []
-    for i in range(3):
-        prob_result.append((prob[i]*100).round(2))
-        class_result.append(dict_result[prob[i]])
-
-    return class_result , prob_result
-
-
-@app.route('/result' , methods = ['GET' , 'POST'])
-def success():
-    error = ''
-    target_img = os.path.join(os.getcwd() , 'static/images')
+@app.route('/classify', methods=['GET', 'POST'])
+def classify():
     if request.method == 'POST':
-        if (request.files):
-            file = request.files['file']
-            if file and allowed_file(file.filename):
-                file.save(os.path.join(target_img , file.filename))
-                img_path = os.path.join(target_img , file.filename)
-                img = file.filename
+        files = request.files.getlist('file')  # Handle multiple files
+        results = []
+        for file in files:
+            if file:
+                image = Image.open(file.stream)
+                image_tensor = classifier_transform(image).unsqueeze(0)
+                outputs = classifier_model(image_tensor)
+                _, predicted = torch.max(outputs, 1)
+                results.append(predicted.item())
+        return render_template('Classifier.html', classification_results=results)
 
-                class_result , prob_result = predict(img_path , model)
+    return render_template('Classifier.html')
 
-                predictions = {
-                      "class1":class_result[0],
-                        "class2":class_result[1],
-                        "class3":class_result[2],
-                        "prob1": prob_result[0],
-                        "prob2": prob_result[1],
-                        "prob3": prob_result[2],
-                }
+@app.route('/detect', methods=['GET', 'POST'])
+def detect():
+    if request.method == 'POST':
+        files = request.files.getlist('file')  # Handle multiple files
+        results = []
+        for file in files:
+            if file:
+                image = Image.open(file.stream)
+                image_tensor = transforms.functional.to_tensor(image).unsqueeze(0)  # Update your transform if needed
+                outputs = detector_model(image_tensor)  # Adjust based on actual model usage
+                results.append(outputs)
+        return render_template('Detector.html', detection_results=results)
 
-            else:
-                error = "Please upload jpg and png images only"
-
-            if(len(error) == 0):
-                return  render_template('Results.html' , img  = img , predictions = predictions)
-            else:
-                return render_template('Test.html' , error = error)
-
-    else:
-        return render_template('Test.html')
+    return render_template('Detector.html')
 
 if __name__ == '__main__':
     import os
